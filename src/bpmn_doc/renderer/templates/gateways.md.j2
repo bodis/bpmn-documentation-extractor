@@ -1,0 +1,16 @@
+| ID | Name | Type | Default Flow |
+|----|------|------|--------------|
+{% for gw in process.gateways -%}
+| `{{ gw.id }}` | {{ gw.name or '—' }} | {{ gw.gateway_type }} | {{ gw.default_flow or '—' }} |
+{% endfor %}
+{% for gw in process.gateways if gw.documentation %}
+
+**{{ gw.name or gw.id }}:** {{ gw.documentation }}
+{% endfor %}
+{% for gw in process.gateways if gw.annotations %}
+
+**{{ gw.name or gw.id }} — Annotations:**
+{% for annotation in gw.annotations %}
+> {{ annotation | replace('\n', '  \n> ') }}
+{% endfor %}
+{% endfor %}

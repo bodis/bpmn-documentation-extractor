@@ -1,0 +1,12 @@
+| ID | Name | Source | Target | Condition |
+|----|------|--------|--------|-----------|
+{% for sf in process.sequence_flows -%}
+| `{{ sf.id }}` | {{ sf.name or '—' }} | `{{ sf.source_ref }}` | `{{ sf.target_ref }}` | {% if sf.condition_expression %}`{{ sf.condition_expression | truncate(60) }}`{% else %}—{% endif %} |
+{% endfor %}
+{% for sf in process.sequence_flows if sf.annotations %}
+
+**{{ sf.name or sf.id }} — Annotations:**
+{% for annotation in sf.annotations %}
+> {{ annotation | replace('\n', '  \n> ') }}
+{% endfor %}
+{% endfor %}

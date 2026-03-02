@@ -1,0 +1,57 @@
+{% if extensions.input_parameters %}
+**Input Parameters:**
+
+| Name | Value | Expression |
+|------|-------|-----------|
+{% for p in extensions.input_parameters -%}
+| `{{ p.name }}` | `{{ p.value | truncate(80) }}` | {{ 'Yes' if p.is_expression else 'No' }} |
+{% endfor %}
+
+{% endif %}
+{% if extensions.output_parameters %}
+**Output Parameters:**
+
+| Name | Value | Expression |
+|------|-------|-----------|
+{% for p in extensions.output_parameters -%}
+| `{{ p.name }}` | `{{ p.value | truncate(80) }}` | {{ 'Yes' if p.is_expression else 'No' }} |
+{% endfor %}
+
+{% endif %}
+{% if extensions.execution_listeners %}
+**Execution Listeners:**
+
+{% for listener in extensions.execution_listeners %}
+- Event: `{{ listener.event }}`{% if listener.class_name %}, Class: `{{ listener.class_name }}`{% endif %}{% if listener.expression %}, Expression: `{{ listener.expression }}`{% endif %}{% if listener.delegate_expression %}, Delegate: `{{ listener.delegate_expression }}`{% endif %}
+{% for f in listener.fields %}
+  - Field `{{ f.name }}`: {% if f.string_value %}`{{ f.string_value }}`{% elif f.expression_value %}expr: `{{ f.expression_value }}`{% endif %}
+{% endfor %}
+{% endfor %}
+
+{% endif %}
+{% if extensions.call_activity_mappings %}
+**Variable Mappings:**
+
+| Direction | Source | Target | Notes |
+|-----------|--------|--------|-------|
+{% for m in extensions.call_activity_mappings -%}
+| {{ m.direction }} | {{ m.source or m.source_expression or '—' }} | {{ m.target or '—' }} | {% if m.all_variables %}all variables{% elif m.business_key_expression %}businessKey: {{ m.business_key_expression }}{% else %}—{% endif %} |
+{% endfor %}
+
+{% endif %}
+{% if extensions.eing_template_registry %}
+**Template Registry:**
+
+{% for tmpl in extensions.eing_template_registry.templates %}
+- `{{ tmpl.id }}` — {{ tmpl.name or '(unnamed)' }}{% if tmpl.description %}: {{ tmpl.description }}{% endif %}
+{% endfor %}
+
+{% endif %}
+{% if extensions.eing_json_sources %}
+**JSON Sources:**
+
+{% for src in extensions.eing_json_sources %}
+- `{{ src.id }}` — {{ src.name or '(unnamed)' }}{% if src.source %}: `{{ src.source }}`{% endif %}
+{% endfor %}
+
+{% endif %}

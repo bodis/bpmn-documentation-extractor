@@ -1,0 +1,35 @@
+# BPMN: {{ doc.file_name }}
+
+Generated: {{ doc.generated_at.strftime('%Y-%m-%d %H:%M:%S') }}
+
+## File Information
+
+| Property | Value |
+|----------|-------|
+| Definitions ID | {{ doc.definitions_id or '—' }} |
+| Exporter | {{ doc.exporter or '—' }} |
+| Exporter Version | {{ doc.exporter_version or '—' }} |
+| Target Namespace | {{ doc.target_namespace or '—' }} |
+
+{% if doc.collaboration and doc.collaboration.participants %}
+## Collaboration
+
+{% include 'collaboration.md.j2' %}
+{% elif not doc.suppress_empty %}
+## Collaboration
+
+_No collaboration defined._
+
+{% endif %}
+
+{% for process in doc.processes %}
+{% include 'process.md.j2' %}
+{% endfor %}
+
+{% if doc.messages or doc.signals or doc.errors or doc.escalations %}
+{% include 'globals.md.j2' %}
+{% elif not doc.suppress_empty %}
+## Global Definitions
+
+_No global messages, signals, errors, or escalations._
+{% endif %}

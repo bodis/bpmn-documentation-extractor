@@ -1,0 +1,38 @@
+{% set task_types = process.tasks | map(attribute='task_type') | unique | list %}
+{% for task_type in task_types %}
+#### {{ task_type | replace('Task', ' Task') | replace('Activity', ' Activity') | title | trim }}
+
+{% for task in process.tasks if task.task_type == task_type %}
+##### {{ task.name or task.id }}
+
+| Property | Value |
+|----------|-------|
+| ID | `{{ task.id }}` |
+| Type | {{ task.task_type }} |
+{% if task.camunda_class %}| Class | `{{ task.camunda_class }}` |{% endif %}
+{% if task.camunda_expression %}| Expression | `{{ task.camunda_expression }}` |{% endif %}
+{% if task.camunda_delegate_expression %}| Delegate Expression | `{{ task.camunda_delegate_expression }}` |{% endif %}
+{% if task.camunda_type %}| Camunda Type | {{ task.camunda_type }} |{% endif %}
+{% if task.camunda_topic %}| Topic | {{ task.camunda_topic }} |{% endif %}
+{% if task.camunda_result_variable %}| Result Variable | `{{ task.camunda_result_variable }}` |{% endif %}
+{% if task.called_element %}| Called Element | `{{ task.called_element }}` |{% endif %}
+{% if task.camunda_async_before %}| Async Before | Yes |{% endif %}
+{% if task.camunda_async_after %}| Async After | Yes |{% endif %}
+
+{% if task.documentation %}
+> {{ task.documentation | replace('\n', '\n> ') }}
+
+{% endif %}
+{% if task.annotations %}
+**Annotations:**
+{% for annotation in task.annotations %}
+> {{ annotation | replace('\n', '  \n> ') }}
+{% endfor %}
+{% endif %}
+{% if not task.extensions.is_empty() %}
+{% with extensions = task.extensions %}
+{% include 'extensions.md.j2' %}
+{% endwith %}
+{% endif %}
+{% endfor %}
+{% endfor %}

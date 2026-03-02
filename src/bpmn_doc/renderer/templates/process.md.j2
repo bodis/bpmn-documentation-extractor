@@ -1,0 +1,69 @@
+## Process: {{ process.name or process.id }}
+
+{% if process.documentation %}
+{{ process.documentation }}
+
+{% endif %}
+**ID:** `{{ process.id }}`
+**Executable:** {{ 'Yes' if process.is_executable else 'No' }}
+
+{% if process.lane_sets %}
+### Lanes
+
+{% for lane_set in process.lane_sets %}
+{% for lane in lane_set.lanes %}
+- **{{ lane.name or lane.id }}** — {{ lane.flow_node_refs | length }} element(s)
+{% endfor %}
+{% endfor %}
+
+{% endif %}
+{% if process.tasks %}
+### Tasks
+
+{% include 'tasks.md.j2' %}
+{% elif not doc.suppress_empty %}
+### Tasks
+
+_No tasks._
+
+{% endif %}
+{% if process.events %}
+### Events
+
+{% include 'events.md.j2' %}
+{% elif not doc.suppress_empty %}
+### Events
+
+_No events._
+
+{% endif %}
+{% if process.gateways %}
+### Gateways
+
+{% include 'gateways.md.j2' %}
+{% elif not doc.suppress_empty %}
+### Gateways
+
+_No gateways._
+
+{% endif %}
+{% if process.subprocesses %}
+### Subprocesses & Call Activities
+
+{% include 'subprocesses.md.j2' %}
+{% elif not doc.suppress_empty %}
+### Subprocesses & Call Activities
+
+_No subprocesses._
+
+{% endif %}
+{% if process.sequence_flows %}
+### Sequence Flows
+
+{% include 'sequence_flows.md.j2' %}
+{% elif not doc.suppress_empty %}
+### Sequence Flows
+
+_No sequence flows._
+
+{% endif %}

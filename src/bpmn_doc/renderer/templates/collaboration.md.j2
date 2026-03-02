@@ -1,0 +1,5 @@
+| ID | Name | Process Ref |
+|----|------|-------------|
+{% for p in doc.collaboration.participants -%}
+| {{ p.id }} | {{ p.name or '—' }} | {{ p.process_ref or '—' }} |
+{% endfor %}

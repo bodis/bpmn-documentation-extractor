@@ -1,0 +1,39 @@
+{% set event_types = process.events | map(attribute='event_type') | unique | list %}
+{% for event_type in event_types %}
+#### {{ event_type | replace('Event', ' Event') | title | trim }}
+
+{% for event in process.events if event.event_type == event_type %}
+##### {{ event.name or event.id }}
+
+| Property | Value |
+|----------|-------|
+| ID | `{{ event.id }}` |
+| Type | {{ event.event_type }} |
+{% if event.attached_to_ref %}| Attached To | `{{ event.attached_to_ref }}` |{% endif %}
+{% if event.event_type == 'boundaryEvent' %}| Cancel Activity | {{ 'Yes' if event.cancel_activity else 'No' }} |{% endif %}
+
+{% if event.documentation %}
+> {{ event.documentation | replace('\n', '\n> ') }}
+
+{% endif %}
+{% if event.annotations %}
+**Annotations:**
+{% for annotation in event.annotations %}
+> {{ annotation | replace('\n', '  \n> ') }}
+{% endfor %}
+{% endif %}
+{% if event.event_definitions %}
+**Event Definitions:**
+
+{% for ed in event.event_definitions %}
+- **{{ ed.def_type | title }}**{% if ed.ref_name %} → {{ ed.ref_name }}{% elif ed.ref_id %} → `{{ ed.ref_id }}`{% endif %}{% if ed.timer_expression %} ({{ ed.timer_expression_type }}: `{{ ed.timer_expression }}`){% endif %}{% if ed.condition_expression %} (condition: `{{ ed.condition_expression }}`){% endif %}{% if ed.error_code %} (code: `{{ ed.error_code }}`){% endif %}{% if ed.escalation_code %} (code: `{{ ed.escalation_code }}`){% endif %}
+
+{% endfor %}
+{% endif %}
+{% if not event.extensions.is_empty() %}
+{% with extensions = event.extensions %}
+{% include 'extensions.md.j2' %}
+{% endwith %}
+{% endif %}
+{% endfor %}
+{% endfor %}

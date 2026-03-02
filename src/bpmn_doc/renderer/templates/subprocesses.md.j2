@@ -1,0 +1,55 @@
+{% for sp in process.subprocesses %}
+#### {{ sp.name or sp.id }}
+
+| Property | Value |
+|----------|-------|
+| ID | `{{ sp.id }}` |
+| Type | {{ sp.subprocess_type }} |
+{% if sp.triggered_by_event %}| Triggered by Event | Yes |{% endif %}
+{% if sp.camunda_async_before %}| Async Before | Yes |{% endif %}
+{% if sp.camunda_async_after %}| Async After | Yes |{% endif %}
+
+{% if sp.documentation %}
+> {{ sp.documentation | replace('\n', '\n> ') }}
+
+{% endif %}
+{% if sp.annotations %}
+**Annotations:**
+{% for annotation in sp.annotations %}
+> {{ annotation | replace('\n', '  \n> ') }}
+{% endfor %}
+{% endif %}
+{% if sp.tasks %}
+**Tasks:** {{ sp.tasks | length }}
+{% for t in sp.tasks %}
+- `{{ t.id }}` — {{ t.name or '(unnamed)' }} ({{ t.task_type }}){% if t.camunda_class %}, class: `{{ t.camunda_class }}`{% endif %}
+{% endfor %}
+
+{% endif %}
+{% if sp.events %}
+**Events:** {{ sp.events | length }}
+{% for e in sp.events %}
+- `{{ e.id }}` — {{ e.name or '(unnamed)' }} ({{ e.event_type }}){% for ed in e.event_definitions %} [{{ ed.def_type }}{% if ed.ref_name %}: {{ ed.ref_name }}{% endif %}]{% endfor %}
+{% endfor %}
+
+{% endif %}
+{% if sp.gateways %}
+**Gateways:** {{ sp.gateways | length }}
+{% for g in sp.gateways %}
+- `{{ g.id }}` — {{ g.name or '(unnamed)' }} ({{ g.gateway_type }})
+{% endfor %}
+
+{% endif %}
+{% if sp.subprocesses %}
+**Nested Subprocesses:** {{ sp.subprocesses | length }}
+{% for sub in sp.subprocesses %}
+- `{{ sub.id }}` — {{ sub.name or '(unnamed)' }} ({{ sub.subprocess_type }})
+{% endfor %}
+
+{% endif %}
+{% if not sp.extensions.is_empty() %}
+{% with extensions = sp.extensions %}
+{% include 'extensions.md.j2' %}
+{% endwith %}
+{% endif %}
+{% endfor %}

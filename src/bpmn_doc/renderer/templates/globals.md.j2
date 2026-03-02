@@ -1,0 +1,42 @@
+## Global Definitions
+
+{% if doc.messages %}
+### Messages
+
+| ID | Name |
+|----|------|
+{% for m in doc.messages -%}
+| `{{ m.id }}` | {{ m.name or '—' }} |
+{% endfor %}
+
+{% endif %}
+{% if doc.signals %}
+### Signals
+
+| ID | Name |
+|----|------|
+{% for s in doc.signals -%}
+| `{{ s.id }}` | {{ s.name or '—' }} |
+{% endfor %}
+
+{% endif %}
+{% if doc.errors %}
+### Errors
+
+| ID | Name | Error Code |
+|----|------|------------|
+{% for e in doc.errors -%}
+| `{{ e.id }}` | {{ e.name or '—' }} | {{ e.error_code or '—' }} |
+{% endfor %}
+
+{% endif %}
+{% if doc.escalations %}
+### Escalations
+
+| ID | Name | Escalation Code |
+|----|------|-----------------|
+{% for e in doc.escalations -%}
+| `{{ e.id }}` | {{ e.name or '—' }} | {{ e.escalation_code or '—' }} |
+{% endfor %}
+
+{% endif %}
