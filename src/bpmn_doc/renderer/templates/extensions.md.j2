@@ -22,12 +22,17 @@
 **Execution Listeners:**
 
 {% for listener in extensions.execution_listeners %}
-- Event: `{{ listener.event }}`{% if listener.class_name %}, Class: `{{ listener.class_name }}`{% endif %}{% if listener.expression %}, Expression: `{{ listener.expression }}`{% endif %}{% if listener.delegate_expression %}, Delegate: `{{ listener.delegate_expression }}`{% endif %}
+*{{ loop.index }}.* Event: `{{ listener.event }}`{% if listener.class_name %} — Class: `{{ listener.class_name }}`{% endif %}{% if listener.expression %} — Expression: `{{ listener.expression }}`{% endif %}{% if listener.delegate_expression %} — Delegate: `{{ listener.delegate_expression }}`{% endif %}
+
+{% if listener.fields %}
+| Field | Value |
+|-------|-------|
 {% for f in listener.fields %}
-  - Field `{{ f.name }}`: {% if f.string_value %}`{{ f.string_value }}`{% elif f.expression_value %}expr: `{{ f.expression_value }}`{% endif %}
-{% endfor %}
+| `{{ f.name }}` | {% if f.string_value %}`{{ f.string_value }}`{% elif f.expression_value %}expr: `{{ f.expression_value }}`{% endif %} |
 {% endfor %}
 
+{% endif %}
+{% endfor %}
 {% endif %}
 {% if extensions.call_activity_mappings %}
 **Variable Mappings:**
