@@ -30,24 +30,30 @@ in pull requests.
 - Execution listeners (event, implementation, fields)
 - Call-activity variable mappings (in/out, all-variables, business key)
 
-## Installation (pipx — recommended)
+## Installation (uv — recommended)
 
-Prerequisites: Python ≥ 3.12, [pipx](https://pipx.pypa.io/) installed.
+Prerequisites: Python ≥ 3.12, [uv](https://docs.astral.sh/uv/) installed.
 
 ```bash
-pipx install git+https://github.com/bodis/bpmn-documentation-extractor.git
+uv tool install git+https://github.com/bodis/bpmn-documentation-extractor.git
 ```
 
 After this, `bpmn-doc` is available system-wide. If the command is not found, run:
 
 ```bash
-pipx ensurepath   # then open a new terminal
+uv tool update-shell   # then open a new terminal
+```
+
+To run it once without installing permanently:
+
+```bash
+uvx --from git+https://github.com/bodis/bpmn-documentation-extractor.git bpmn-doc <file.bpmn>
 ```
 
 ## Updating
 
 ```bash
-pipx upgrade bpmn-documentation-extractor
+uv tool upgrade bpmn-documentation-extractor
 ```
 
 ## Usage
@@ -73,9 +79,9 @@ uv sync          # creates .venv and installs all deps
 uv run bpmn-doc <file.bpmn>
 ```
 
-## Installing locally with pipx (from source)
+## Installing locally from source
 
 ```bash
 cd bpmn-documentation-extractor
-pipx install .
+uv tool install .
 ```
